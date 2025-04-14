@@ -1,76 +1,71 @@
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler
-from sklearn.tree import DecisionTreeClassifier
+
+from imblearn.over_sampling import SMOTE
+from sklearn.feature_selection import RFE
+
 from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+
+from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import cross_val_score
+
+from sklearn.metrics import f1_score
 from sklearn.metrics import accuracy_score
-import matplotlib.pyplot as plt
-
-
-### Should we set a maximum number of features we are willing to do?
+from sklearn.metrics import classification_report
 
 
 TOTAL_FEATURES = 300
-NUM_SAMPLES = 1000
-df_x_train = pd.read_csv("./X_train.csv")
-df_y_train = pd.read_csv("./y_train.csv")
 
-X = np.array(df_x_train)
-y = np.array(df_y_train)
+def handleImbalanceViaSmote():
+    df_x_train = pd.read_csv("./X_train.csv")
+    df_y_train = pd.read_csv("./y_train.csv")
 
-scaler = StandardScaler().fit(X=df_x_train)
-X = scaler.fit_transform(X)
+    X = np.array(df_x_train)
+    y = np.array(df_y_train)
 
+    s = SMOTE(random_state=12)
 
-X_train, X_val, y_train, y_val = train_test_split(X, y, train_size=0.7)
+    X_res, y_res = s.fit_resample(X=X, y=y)
 
-avgFeatureImportances = [0 for _ in range(TOTAL_FEATURES)]
+    NUM_SAMPLES = X_res.shape[0]
 
-### getting feature importances
-NUM_TRIALS = 50
-for trial in range(NUM_TRIALS):
-    print(f"Trial {trial + 1}...")
-    model = DecisionTreeClassifier(criterion='entropy').fit(X=X_train, y=y_train)
-    impAndFeatures = [(model.feature_importances_[i], i) for i in range(TOTAL_FEATURES)]
-    for imp, feature in impAndFeatures:
-        avgFeatureImportances[feature] += imp / NUM_TRIALS
+    y_res.reshape((-1, 1))
 
-avgFeatureImportance = [(avgFeatureImportances[i], i) for i in range(TOTAL_FEATURES)]
-avgFeatureImportance.sort(reverse=True)
-for avgImp, feature in avgFeatureImportance:
-    print(f"Feature {feature} with avg importance of {avgImp}")
-
-plt.bar(x=range(TOTAL_FEATURES), height=avgFeatureImportances, edgecolor="black", width=1.0)
-plt.xticks(range(TOTAL_FEATURES))
-plt.xticks(rotation=90, fontsize=4)
-
-plt.xlabel('Feature Number')
-plt.ylabel('Avg Feature Importance')
-plt.title(f'Avg Feature Importance for each Feature over {NUM_TRIALS} trials')
-plt.show()
+    return (X_res, y_res)
 
 
-# trial_model = DecisionTreeClassifier(criterion="entropy")
-# MAX_NUMBER_OF_FEATURES = 300
-# bestNumOfFeatures = None
-# bestAcc = None
-# for trial in range(1, MAX_NUMBER_OF_FEATURES + 1):
+def crossValidation(X_train, y_train):
+    scores = cross_val_score(DecisionTreeClassifier(criterion='entropy', random_state=42), X_train, y_train, cv=10, scoring="f1_macro")
 
-#     currFeatures = np.array([feat for imp, feat  in impAndFeatures[:trial]])
-#     X_train_trial = X_train[:, currFeatures]
-#     X_val_trial = X_val[:, currFeatures]
+    return scores.mean()
 
-#     trial_model.fit(X=X_train_trial, y=y_train)
-#     y_val_pred = trial_model.predict(X=X_val_trial)
+def main():
 
-#     acc = accuracy_score(y_val, y_val_pred)
+    X, y = handleImbalanceViaSmote()
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.7)
 
-#     if bestAcc is None or acc > bestAcc:
-#         print(f"{trial} number of features may be better")
-#         bestAcc = acc
-#         bestNumOfFeatures = trial
-#     else:
-#         print(f"{trial} number of features does not seem as good")
+    dt = DecisionTreeClassifier(criterion='entropy', random_state=42)
 
-# print(f"After all is said and done, the best number of features to use is {bestNumOfFeatures},")
-# print(f"specifically {[feat for imp, feat  in impAndFeatures[:bestNumOfFeatures]]}")
+    bestF1Score = -1
+    bestNumFeatures = -1
+    for numFeatures in range(1, 301, 30):
+        print(f"Trying with {numFeatures} features...")
+        X_train_copy = X_train[:,:]
+        rfe = RFE(estimator=dt, n_features_to_select=numFeatures, step=0.2, verbose=1)
+        rfe.fit(X=X_train_copy, y=y_train)
+
+        features = np.where(rfe.support_)
+        print(f"Chosen features = {features}")
+
+        X_train_copy = X_train_copy[:,features[0]]
+        f1Score = crossValidation(X_train_copy, y_train)
+        print(f"f1 Score for {numFeatures} number of features is {f1Score}")
+
+        if f1Score > bestF1Score:
+            bestF1Score = f1Score
+            bestNumFeatures = numFeatures
+    
+    print(f"Best Number of Features = {bestNumFeatures}")
+
+main()

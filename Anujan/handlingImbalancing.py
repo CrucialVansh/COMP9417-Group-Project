@@ -19,17 +19,22 @@ from pprint import pprint
 
 TOTAL_FEATURES = 300
 
-def handleImbalanceViaSmote():
+def getData():
     df_x_train = pd.read_csv("./X_train.csv")
     df_y_train = pd.read_csv("./y_train.csv")
 
     X = np.array(df_x_train)
     y = np.array(df_y_train)
 
+    return X, y
+
+def handleImbalanceViaSmote(X, y):
+
+
     print(X.shape)
     print(y.shape)
 
-    s = SMOTE()
+    s = SMOTE(random_state=42)
     print(s)
 
     X_res, y_res = s.fit_resample(X=X, y=y)
@@ -65,16 +70,18 @@ def main():
 
     ### After handling imbalance with smote there are 125412
     ### Each class has 4479 samples
-    X, y = handleImbalanceViaSmote(random_state=42)
+    X, y = getData()
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.7)
+    X, y = handleImbalanceViaSmote(X_train, y_train)
 
     ### In X_train, there are 87788 samples; in X_test there are 37,624 samples
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.7)
+    
 
 
     ### HANDLE FEATURE SELECTION ###
     dt = DecisionTreeClassifier(criterion='entropy')
 
-    rfe = RFE(estimator=dt, n_features_to_select=20, step=0.2, verbose=1)
+    rfe = RFE(estimator=dt, n_features_to_select=210, step=0.2, verbose=1)
     rfe.fit(X=X_train, y=y_train)
 
 

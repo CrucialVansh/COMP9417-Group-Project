@@ -30,12 +30,10 @@ def getData():
 
 def handleImbalanceViaSmote(X, y):
 
-
     print(X.shape)
     print(y.shape)
 
-    s = SMOTE(random_state=42)
-    print(s)
+    s = SMOTE(random_state=42, k_neighbors=3)
 
     X_res, y_res = s.fit_resample(X=X, y=y)
 
@@ -68,20 +66,15 @@ def testingSet(model, X_test, y_test):
 def main():
     ### Handle Class Imbalances using SMOTE ###
 
-    ### After handling imbalance with smote there are 125412
-    ### Each class has 4479 samples
     X, y = getData()
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.7)
-    X, y = handleImbalanceViaSmote(X_train, y_train)
-
-    ### In X_train, there are 87788 samples; in X_test there are 37,624 samples
-    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.7, random_state=42)
+    X, y = handleImbalanceViaSmote(X_train, y_train)    
 
 
     ### HANDLE FEATURE SELECTION ###
     dt = DecisionTreeClassifier(criterion='entropy')
 
-    rfe = RFE(estimator=dt, n_features_to_select=210, step=0.2, verbose=1)
+    rfe = RFE(estimator=dt, n_features_to_select=20, step=0.2, verbose=1)
     rfe.fit(X=X_train, y=y_train)
 
 
@@ -91,12 +84,6 @@ def main():
     pprint(features)
     X_train = X_train[:,features[0]]
     X_test = X_test[:,features[0]]
-
-    print(X_train.shape)
-    print()
-    print(X_test.shape)
-
-    crossValidation(X_train, y_train)
 
     model = DecisionTreeClassifier(criterion='entropy').fit(X=X_train, y=y_train)
 

@@ -39,7 +39,10 @@ it is so drastically different to the distribution of classes in the training da
 
 Resources
 - https://www.youtube.com/watch?v=5qNKolRwOkQ
+- https://proceedings.neurips.cc/paper_files/paper/2019/file/846c260d715e5b854ffad5f70a516c88-Paper.pdf
 
-Good for understanding MMD - Maximum Mean Discrepancy
+The YT vid Good for understanding MMD - Maximum Mean Discrepancy
 Good way to check if the input data (features) have shifted - that is whether there
 is covariate shifting. 
+
+The second resource _mentions_ that you can obtain a p-value for the MMD by using a **permutation** test

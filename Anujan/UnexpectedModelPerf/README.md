@@ -54,7 +54,7 @@ I have written a naive Permutation Test to for checking the p value.
 
 Cannot reject the null hypothesis (the two input distributions are equal) because p is NOT low enough.
 
-
+See **MMD_covariate_shift_pValue_results.txt** for results.
 ### Black Box Shift Estimation - Label Shifting
 
 **Resources**
@@ -72,4 +72,15 @@ That is to say, given a particular class, the features look the same (previously
 3. Something about a matrix that is invertible i dont really know
 
 The conclusion that I have drawn is that I can use the same **MMD** technique to check the distribution of the labels I *have* been given from Data Test 2 and compare it to the distribution of the labels I have been given from the training set.
+
+
+Using MMD on the labels, it seems like we have label shifting!
+
+
+See file **MMD_label_shift_pValue_results.txt** for results. 
+## Handling Label Shifting
+
+**Resources**
+- https://www.youtube.com/watch?v=5bRPyHE8hsU
+- https://assets.amazon.science/53/21/14143d6c4ecbb9b1ccdbd71162bd/detecting-and-correcting-for-label-shift-with-black-box-predictors.pdf
 

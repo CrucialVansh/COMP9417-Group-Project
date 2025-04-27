@@ -2,7 +2,7 @@ import numpy as np
 from MMD import mmd_rbf
 import pandas as pd
 
-def mmd_permutation_test(X, Y, n_permutations=1000):
+def mmd_permutation_test(X, Y, n_permutations=10000):
     print(X.shape)
     print(Y.shape)
     observed_mmd = mmd_rbf(X, Y)

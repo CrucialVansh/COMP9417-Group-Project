@@ -48,10 +48,7 @@ def check_conditional_distribution_shift(df1, df2, target_column, features, n_sa
     data = StandardScaler().fit_transform(data)
     
     X_train, X_test, y_train, y_test = train_test_split(data, labels, test_size=0.2, stratify=labels, random_state=seedNum)
-    # X_train, y_train = useSMOTE(X_train, y_train)
-    # print()
-    # print(X_train)
-    # print()
+
     discriminator = LogisticRegression(solver='lbfgs', max_iter=1000)
     
     discriminator.fit(X_train, y_train)

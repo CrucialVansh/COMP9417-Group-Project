@@ -64,7 +64,7 @@ Estimating the ratio of $$\frac{q_{y_l}}{p_{y_l}}$$ for each label (or class) *l
 where q is a _new_ distribution and p is the _original_ distribution
 
 Assumptions made
-1. $$p(x | y) = q(x | y)
+1. $$p(x | y) = q(x | y)$$
 That is to say, given a particular class, the features look the same (previously described in introduction to label shifting)
 
 2. In the training data, there is an instance of every class

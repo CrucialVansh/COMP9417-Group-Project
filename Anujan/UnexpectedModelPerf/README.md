@@ -84,3 +84,6 @@ See file **MMD_label_shift_pValue_results.txt** for results.
 - https://www.youtube.com/watch?v=5bRPyHE8hsU
 - https://assets.amazon.science/53/21/14143d6c4ecbb9b1ccdbd71162bd/detecting-and-correcting-for-label-shift-with-black-box-predictors.pdf
 
+
+CONCLUSION: AFTER DOING ROC AUC, I think its concept shifting
+

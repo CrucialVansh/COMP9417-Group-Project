@@ -8,13 +8,13 @@ from sklearn.preprocessing import StandardScaler
 from statistics import mean
 
 # Taken from Archie's Notebook
-def useSMOTE(X_train, y_train):
-    smote = SMOTE(random_state=42, k_neighbors=3)
-    X = X_train.copy()
-    y = y_train.copy().reshape(-1)
-    X, y = smote.fit_resample(X, y)
-    if smote:
-        return X, y
+# def useSMOTE(X_train, y_train):
+#     smote = SMOTE(random_state=42, k_neighbors=3)
+#     X = X_train.copy()
+#     y = y_train.copy().reshape(-1)
+#     X, y = smote.fit_resample(X, y)
+#     if smote:
+#         return X, y
 
 def check_conditional_distribution_shift(df1, df2, target_column, features, n_samples_df1=None, seedNum=42):
     """
@@ -48,7 +48,7 @@ def check_conditional_distribution_shift(df1, df2, target_column, features, n_sa
     data = StandardScaler().fit_transform(data)
     
     X_train, X_test, y_train, y_test = train_test_split(data, labels, test_size=0.2, stratify=labels, random_state=seedNum)
-    X_train, y_train = useSMOTE(X_train, y_train)
+    # X_train, y_train = useSMOTE(X_train, y_train)
     # print()
     # print(X_train)
     # print()

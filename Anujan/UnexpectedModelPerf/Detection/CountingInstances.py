@@ -3,7 +3,7 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
-y = pd.read_csv("./y_test_2_reduced.csv")
+y = pd.read_csv("./data/y_test_2_reduced.csv")
 
 class_counts = y['label'].value_counts().sort_index()
 print("Class counts:\n", class_counts)

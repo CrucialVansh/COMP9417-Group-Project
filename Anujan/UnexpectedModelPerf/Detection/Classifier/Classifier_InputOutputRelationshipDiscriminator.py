@@ -18,13 +18,17 @@ from statistics import mean
 
 def check_conditional_distribution_shift(df1, df2, target_column, features, n_samples_df1=None, seedNum=42):
     """
-    For each class cls, looks for distribution shift in P(x | cls). Essentially, takes
-    a class cls, and extracts the samples from the original and new data sets which output 
-    that class. Assigns a value 0 to the samples that come from the original distribution
-    and 1 to the samples that come from the new distribution. A model is trained on a 
-    random portion of these samples and validated on another portion. If the model is able
-    to distinguish between which samples originate from the original distribution (0) and
-    the new distribution (1), this indicates there has been a concept shift of the class.
+    Takes in samples from the original training distribution and the new distribution.
+    Assigns an extra feature to each sample - if the sample is from the original
+    distribution, then this feature will be given a value of 0. Else, this feature
+    will be given a value of 1.
+
+    This data is combined and split into a training and validation set. A logsitic
+    regression model is trained on the training set and then tries to discriminate 
+    between the two distribtutions in the validation set. 
+
+    The primary metric used here is ROC AUC to determien whether the model is able
+    to perform better than simple random guessing (i.e. if ROC AUC > 0.5).
     """
 
     df1_subset = df1.copy()
@@ -37,15 +41,9 @@ def check_conditional_distribution_shift(df1, df2, target_column, features, n_sa
     # Create a target variable indicating the dataset origin
     labels_df1 = np.zeros(len(df1_subset))  # 0 for df1
     labels_df2 = np.ones(len(df2_subset))   # 1 for df2
-
+    
     data = pd.concat([df1_subset, df2_subset], ignore_index=True)
     labels = np.concatenate([labels_df1, labels_df2])
-    
-    # data contains the 300 feature columns + the class column
-    # labels contains one column with either a 0 or a 1 for original and new distributions
-    # Train a classifier to distinguish between the datasets
-
-    data = StandardScaler().fit_transform(data)
     
     X_train, X_test, y_train, y_test = train_test_split(data, labels, test_size=0.2, stratify=labels, random_state=seedNum)
 
@@ -68,16 +66,16 @@ def check_conditional_distribution_shift(df1, df2, target_column, features, n_sa
 if __name__ == "__main__":
     #  Load the feature data from the first CSV file
     NUM_DATASET2_LABELED = 202
-    features_df1 = pd.read_csv('../X_train.csv')
+    features_df1 = pd.read_csv('./data//X_train.csv')
 
     # Load the output class data from the first CSV file
-    output_class_df1 = pd.read_csv('../y_train.csv')
+    output_class_df1 = pd.read_csv('./data/y_train.csv')
 
     # Load the feature data from the second CSV file
-    features_df2 = pd.read_csv('./X_test_2.csv')[ : NUM_DATASET2_LABELED]
+    features_df2 = pd.read_csv('./data/X_test_2.csv')[ : NUM_DATASET2_LABELED]
 
     # Load the output class data from the second CSV file
-    output_class_df2 = pd.read_csv('./y_test_2_reduced.csv')
+    output_class_df2 = pd.read_csv('./data/y_test_2_reduced.csv')
 
     target_column = 'label'
 

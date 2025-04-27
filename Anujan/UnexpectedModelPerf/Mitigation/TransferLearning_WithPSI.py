@@ -8,17 +8,17 @@ from crossWeightedEntropyLoss import weighted_log_loss
 
 from sklearn.metrics import classification_report
 
-
 from chosenFeatures import chosenFeatures
+
 
 if __name__ == "__main__":
     # Loading in the original XGBoost model created from the original training data
     model_source = xgb.Booster(model_file='parent_model.json')
 
-
-    # This is so a stratified train_test_split can occur
-    X_target = pd.read_csv("./X_test_2_edited.csv")
-    y_target = pd.read_csv("./y_test_2_reduced_edited.csv")
+    # Add some duplicate samples so every class appears at least twice in the 
+    # data. Saved this 'fudged' data in _edited.csv files.
+    X_target = pd.read_csv("./data/X_test_2_edited.csv")
+    y_target = pd.read_csv("./data/y_test_2_reduced_edited.csv")
 
     X_target = np.array(X_target)
     y_target = np.array(y_target)

@@ -3,8 +3,6 @@ from MMD import mmd_rbf
 import pandas as pd
 
 def mmd_permutation_test(X, Y, n_permutations=1000):
-    print(X.shape)
-    print(Y.shape)
     observed_mmd = mmd_rbf(X, Y)
     print(f"Observed mmd = {observed_mmd}")
     combined_data = np.vstack((X, Y))
@@ -28,8 +26,8 @@ def mmd_permutation_test(X, Y, n_permutations=1000):
 
 # Example usage
 if __name__ == "__main__":
-    y_df1 = pd.read_csv("../y_train.csv")
-    y_df2 = pd.read_csv("./y_test_2_reduced.csv")
+    y_df1 = pd.read_csv("./data/y_train.csv")
+    y_df2 = pd.read_csv("./data/y_test_2_reduced.csv")
 
     X = np.array(y_df1)
     Y = np.array(y_df2)

@@ -58,7 +58,7 @@ if __name__ == "__main__":
     y_true = np.zeros((y_target_test.shape[0], 28))         # 28 refers to the number of possible classes
     y_true[np.arange(y_target_test.shape[0]), y_target_test] = 1
 
-    # xgb_2.save_model("parent_model.json")
+    xgb_2.save_model("parent_model.json")
 
     print(f"WEIGHTED LOG LOSS = {weighted_log_loss(y_true, y_pred)}")
 

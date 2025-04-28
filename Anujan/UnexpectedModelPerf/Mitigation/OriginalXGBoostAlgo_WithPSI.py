@@ -7,8 +7,6 @@ import pandas as pd
 
 from sklearn.utils.class_weight import compute_class_weight
 from crossWeightedEntropyLoss import weighted_log_loss
-from sklearn.metrics import classification_report
-
 
 from chosenFeatures import chosenFeatures
 

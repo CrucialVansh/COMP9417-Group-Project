@@ -3,7 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.decomposition import PCA
-from sklearn.manifold import TSNE
 
 # Load the datasets
 X = pd.read_csv('./data/X_train.csv')

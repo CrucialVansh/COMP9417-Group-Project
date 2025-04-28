@@ -29,9 +29,11 @@ def weighted_log_loss(y_true, y_pred):
 
 def lasso_selection(X, y, alpha=0.01, max_iter=1000):
     X_scaled = StandardScaler().fit_transform(X)
+
     lasso = Lasso(alpha=alpha, max_iter=max_iter, random_state=42)
     lasso.fit(X_scaled, y)
-    selected_features = np.where(lasso.coef_ > 0)[0]
+    selected_features = np.where(np.abs(lasso.coef_) > 0)[0]
+
     return selected_features
 
 # Load data

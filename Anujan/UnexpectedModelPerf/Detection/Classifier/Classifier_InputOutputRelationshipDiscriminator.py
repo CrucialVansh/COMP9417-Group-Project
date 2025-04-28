@@ -7,14 +7,6 @@ from imblearn.over_sampling import SMOTE
 from sklearn.preprocessing import StandardScaler
 from statistics import mean
 
-# Taken from Archie's Notebook
-# def useSMOTE(X_train, y_train):
-#     smote = SMOTE(random_state=42, k_neighbors=3)
-#     X = X_train.copy()
-#     y = y_train.copy().reshape(-1)
-#     X, y = smote.fit_resample(X, y)
-#     if smote:
-#         return X, y
 
 def check_conditional_distribution_shift(df1, df2, target_column, features, n_samples_df1=None, seedNum=42):
     """
@@ -35,6 +27,8 @@ def check_conditional_distribution_shift(df1, df2, target_column, features, n_sa
     df2_subset = df2.copy()
     
 
+    # Chose to undersample from the training data to not oversaturate the 
+    # classifier with data from one distribution
     df1_subset = df1_subset.sample(n=202, random_state=seedNum)
 
 
@@ -61,25 +55,18 @@ def check_conditional_distribution_shift(df1, df2, target_column, features, n_sa
 
     return results
 
-# Example Usage (assuming you have your data in CSV files)
-
 if __name__ == "__main__":
-    #  Load the feature data from the first CSV file
     NUM_DATASET2_LABELED = 202
     features_df1 = pd.read_csv('./data//X_train.csv')
 
-    # Load the output class data from the first CSV file
     output_class_df1 = pd.read_csv('./data/y_train.csv')
 
-    # Load the feature data from the second CSV file
     features_df2 = pd.read_csv('./data/X_test_2.csv')[ : NUM_DATASET2_LABELED]
 
-    # Load the output class data from the second CSV file
     output_class_df2 = pd.read_csv('./data/y_test_2_reduced.csv')
 
     target_column = 'label'
 
-    # Combine feature and output class data into single DataFrames
     train_df = pd.concat([features_df1, output_class_df1], axis=1)
     test_df = pd.concat([features_df2, output_class_df2], axis=1)
     features = [str(i) for i in range(300)]

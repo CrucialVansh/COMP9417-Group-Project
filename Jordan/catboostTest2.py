@@ -5,7 +5,7 @@ from sklearn.metrics import f1_score, accuracy_score
 from sklearn.utils.class_weight import compute_class_weight
 from catboost import CatBoostClassifier
 
-def weighted_log_loss(y_true, y_pred):
+def weighted_log_loss(y_true, y_pred, epsilon=1e-15):
     """
     Compute the weighted cross-entropy (log loss) given true labels and predicted probabilities.
     
@@ -18,23 +18,25 @@ def weighted_log_loss(y_true, y_pred):
     """
     # Compute class frequencies
     class_counts = np.sum(y_true, axis=0)  # Sum over samples to get counts per class
-    class_weights = 1.0 / class_counts
+    with np.errstate(divide='ignore', invalid='ignore'):
+        class_weights = np.where(class_counts > 0, 1.0 / class_counts, 0.0)
     class_weights /= np.sum(class_weights)  # Normalize weights to sum to 1
     
     # Compute weighted loss
     sample_weights = np.sum(y_true * class_weights, axis=1)  # Get weight for each sample
+    y_pred = np.clip(y_pred, epsilon, 1.0 - epsilon)
     loss = -np.mean(sample_weights * np.sum(y_true * np.log(y_pred), axis=1))
     
     return loss
 
 
-X = pd.read_csv('../X_train.csv')
-y = pd.read_csv('../y_train.csv')
-y = y.values.ravel()
+X_train = pd.read_csv('../X_train.csv')
+y_train = pd.read_csv('../y_train.csv')
+y_train = y_train.values.ravel()
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, stratify=y, random_state=42
-)
+X_test = pd.read_csv('../X_test_2.csv')
+X_test = X_test.iloc[:202].reset_index(drop=True)
+y_test = pd.read_csv('../y_test_2_reduced.csv')
 
 classes = np.unique(y_train)
 weights = compute_class_weight(class_weight='balanced', classes=classes, y=y_train)

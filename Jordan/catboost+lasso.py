@@ -3,7 +3,18 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score, accuracy_score
 from sklearn.utils.class_weight import compute_class_weight
+from sklearn.linear_model import Lasso
 from catboost import CatBoostClassifier
+from sklearn.preprocessing import StandardScaler
+
+def lasso_selection(X, y, alpha=0.01, max_iter=1000):
+    X_scaled = StandardScaler().fit_transform(X)
+
+    lasso = Lasso(alpha=alpha, max_iter=max_iter, random_state=42)
+    lasso.fit(X_scaled, y)
+    selected_features = np.where(lasso.coef_ > 0)[0]
+
+    return selected_features
 
 def weighted_log_loss(y_true, y_pred):
     """
@@ -35,6 +46,10 @@ y = y.values.ravel()
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, stratify=y, random_state=42
 )
+
+selected_features = lasso_selection(X_train, y_train)
+X_train = X_train.iloc[:, selected_features]
+X_test = X_test.iloc[:, selected_features]
 
 classes = np.unique(y_train)
 weights = compute_class_weight(class_weight='balanced', classes=classes, y=y_train)

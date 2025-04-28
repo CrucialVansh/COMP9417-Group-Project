@@ -18,7 +18,7 @@ def lasso_selection(X, y, alpha=0.01, max_iter=1000):
 
     lasso = Lasso(alpha=alpha, max_iter=max_iter, random_state=RANDOM_STATE)
     lasso.fit(X_scaled, y)
-    selected_features = np.where(lasso.coef_ > 0)[0]
+    selected_features = np.where(np.abs(lasso.coef_) > 0)[0]
 
     return selected_features
 
@@ -91,14 +91,6 @@ if __name__ == '__main__':
 
     selected_features = lasso_selection(X_train, y_train)
     print(f"Selected features: {selected_features}, length: {len(selected_features)}")
-    # Selected features: [  4   8  10  11  13  15  16  21  22  24  25  27  31  32  33  35  36  38
-    #   40  41  42  44  45  47  48  49  50  51  53  57  58  59  61  65  66  70
-    #   71  74  75  76  78  79  83  84  85  86  87  88  90  91  94  95 101 103
-    #  104 107 110 113 117 119 121 122 123 127 129 132 133 136 139 145 147 153
-    #  160 165 166 168 169 170 175 176 177 178 181 183 184 185 187 188 189 194
-    #  195 196 197 198 199 200 201 202 203 205 210 212 213 215 217 222 227 228
-    #  230 231 232 233 234 235 237 239 241 242 249 250 251 252 254 260 265 268
-    #  269 270 272 274 275 276 277 279 283 284 285 286 288 290 293 297 298 299], length: 144
     X_train = X_train[:, selected_features]
     X_val = X_val[:, selected_features]
 
@@ -145,9 +137,9 @@ if __name__ == '__main__':
 
     # report
     print("Classification Report (With LASSO selection): ")
-    #     accuracy                           0.61      2000
-    #    macro avg       0.39      0.47      0.41      2000
-    # weighted avg       0.75      0.61      0.66      2000
+    #     accuracy                           0.66      2000
+    #    macro avg       0.43      0.49      0.45      2000
+    # weighted avg       0.76      0.66      0.70      2000
     print(selected_report)
 
     print("Classification Report (Without LASSO selection): ")

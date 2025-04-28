@@ -30,21 +30,23 @@ def check_conditional_distribution_shift(df1, df2, features, seedNum=42):
     # Create a target variable indicating the dataset origin
     labels_df1 = np.zeros(len(df1_subset))  # 0 for df1
     labels_df2 = np.ones(len(df2_subset))   # 1 for df2
-
+    
+    # Each row consists of feature values and then the corresponding class
     data = pd.concat([df1_subset, df2_subset], ignore_index=True)
+    
+    # 0's then 1's depending on dataset origin
     labels = np.concatenate([labels_df1, labels_df2])
     
-    X_train, X_test, y_train, y_test = train_test_split(data, labels, test_size=0.2, stratify=labels, random_state=seedNum)
-    # X_train, y_train = useSMOTE(X_train, y_train)
-    # print()
-    # print(X_train)
-    # print()
+    X_train, X_test, y_train, y_test = train_test_split(
+        data, labels, test_size=0.2, stratify=labels, random_state=seedNum
+    )
+
     discriminator = LogisticRegression(solver='lbfgs', max_iter=1000)
     
     discriminator.fit(X_train, y_train)
     y_pred_proba = discriminator.predict_proba(X_test)[:, 1]
     auc = roc_auc_score(y_test, y_pred_proba)
-    results =  auc
+    results = auc
 
     print(f"Dataset Discriminator ROC AUC: {auc:.4f}")
     print("Classification Report:")
@@ -53,14 +55,11 @@ def check_conditional_distribution_shift(df1, df2, features, seedNum=42):
 
     return results
 
-# Example Usage (assuming you have your data in CSV files)
-
 if __name__ == "__main__":
-    #  Load the feature data from the first CSV file
+
     NUM_DATASET2_LABELED = 202
     features_df1 = pd.read_csv('./data/X_train.csv')
 
-    # Load the feature data from the second CSV file
     features_df2 = pd.read_csv('./data/X_test_2.csv')[ : NUM_DATASET2_LABELED]
 
 

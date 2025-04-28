@@ -103,6 +103,7 @@ def categorize_psi(psi):
 
     https://feature-engine.trainindata.com/en/1.8.x/api_doc/selection/DropHighPSIFeatures.html
     https://coralogix.com/ai-blog/a-practical-introduction-to-population-stability-index-psi/
+    From above:
     > PSI < 0.1: Insignificant change—your model is stable!
     > 0.1 <= PSI < 0.25: Moderate change—consider some adjustments.
     > PSI >= 0.25: Significant change—your model is unstable and needs an update.
@@ -115,18 +116,6 @@ def categorize_psi(psi):
         return 'Significant change'
 
 def visualize_distribution_shift(train_data, test_data, top_n=5):
-    """
-    Visualize distribution shift for top N most unstable features
-
-    Parameters:
-    -----------
-    train_data : DataFrame
-        Training dataset
-    test_data : DataFrame
-        Test dataset
-    top_n : int, optional
-        Number of top features to visualize
-    """
     import matplotlib.pyplot as plt
     import seaborn as sns
 

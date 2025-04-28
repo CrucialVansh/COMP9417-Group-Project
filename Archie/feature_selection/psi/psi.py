@@ -191,7 +191,7 @@ def demonstrate_psi():
     # print(features_with_moderate_change)
     # print(f"total: {len(features_with_moderate_change)}")
 
-    print(get_stable_features(X_test_1, X_test_2))
+    print(len(get_stable_features(X_test_1, X_test_2)))
 
     # Visualize top distribution shifts
     visualize_distribution_shift(X_test_1, X_test_2, top_n=5)

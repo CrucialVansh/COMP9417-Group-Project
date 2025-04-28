@@ -57,19 +57,8 @@ estimator = LogisticRegression(
 
 cv = StratifiedKFold(n_splits=4)
 
-# old feature selection method, always chooses 300 features.
-rfecv = RFECV(
-    estimator=estimator,
-    step=10,
-    cv=cv,
-    scoring="f1_weighted",  # f1 weighted for multiclass imbalance too (when not using smote)
-    n_jobs=-1,
-    # random_state=RANDOM_STATE
-)
-
 train_pipeline = Pipeline([
     ("scaler", StandardScaler()),
-    # ("feature_selection", rfecv), # features will be selected with lasso
     ("classifier", estimator)
 ])
 

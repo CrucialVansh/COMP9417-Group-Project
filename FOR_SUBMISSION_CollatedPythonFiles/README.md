@@ -13,17 +13,9 @@ Feature selection which prioritises choosing features that are more stable betwe
 
 **Run command:** python3 psi.py
 
-### OriginalXGBoostAlgo_WithPSI.py
-
-
-Should produce a model file called **parent_model.json**
-
-**Run command:** python3 OriginalXGBoostAlgo_WithPSI.py
 
 ### TransferLearningWithPSI.py
 Trains a similar XGBoost model on the original training data but using the features selected from the PSI method. Then uses this model to train a second XGBoost that is trained on the second test distribution.
-
-Should produce a model file called **learning_transfer.json**
 
 **Run command** python3 TransferLearningWithPSI.py
 

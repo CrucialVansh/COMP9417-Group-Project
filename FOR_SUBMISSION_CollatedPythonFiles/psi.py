@@ -165,8 +165,8 @@ def get_stable_features(X1: pd.DataFrame, X2: pd.DataFrame):
 def demonstrate_psi():
     np.random.seed(42)
 
-    X: pd.DataFrame = pd.read_csv("./dataX_train.csv")
-    y: pd.DataFrame = pd.read_csv("./datay_train.csv")
+    X: pd.DataFrame = pd.read_csv("./data/X_train.csv")
+    y: pd.DataFrame = pd.read_csv("./data/y_train.csv")
 
     X_test_1: pd.DataFrame = pd.read_csv("./data/X_test_1.csv")
     # which will be tested against y_test_1

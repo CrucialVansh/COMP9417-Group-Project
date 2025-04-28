@@ -26,3 +26,8 @@ Trains a similar XGBoost model on the original training data but using the featu
 Should produce a model file called **learning_transfer.json**
 
 **Run command** python3 TransferLearningWithPSI.py
+
+#### catBoost.py
+Trains 3 CatBoostClassifier models on the training data. One model only uses class weights, another uses lasso for feature importance and the last uses logistic regression ontop.
+
+**Run command:** python3 catBoost.py

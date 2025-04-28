@@ -3,8 +3,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score, classification_report
 import numpy as np
-from imblearn.over_sampling import SMOTE
-from sklearn.preprocessing import StandardScaler
 from statistics import mean
 
 
